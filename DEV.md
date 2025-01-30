@@ -18,6 +18,11 @@ in `/src/index.ts` uncomment the lines that call `runExample()`
 
 * run: `npm run build` or in VSCOde `Ctrl` + `Shift` + `B`
 
+
+## Generate coverage report
+
+* run: `bash make_coverage_report.sh`
+
 ## Github
 
 * edit CHANGELOG.md and add the new version

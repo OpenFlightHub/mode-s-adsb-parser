@@ -1,8 +1,7 @@
 import type {Config} from 'jest';
 
 const config: Config = {
-  preset: 'ts-jest',
-  collectCoverage: true
+  preset: 'ts-jest'
 }
 
 export default config
