@@ -59,9 +59,9 @@ test('parseBitStructure', ()=>{
     }, {
         name: 'b',
         bits: 1
-    }])).toStrictEqual(new Map<string, number>()
-        .set('a', 2)
-        .set('b', 1)
+    }])).toStrictEqual(new Map<string, string>()
+        .set('a', '10')
+        .set('b', '1')
     )
 
     expect(parseBitStructure('1011', [{
@@ -70,9 +70,9 @@ test('parseBitStructure', ()=>{
     }, {
         name: 'b',
         bits: -1
-    }])).toStrictEqual(new Map<string, number>()
-        .set('a', 2)
-        .set('b', 3)
+    }])).toStrictEqual(new Map<string, string>()
+        .set('a', '10')
+        .set('b', '11')
     )
 
     expect(()=>{
