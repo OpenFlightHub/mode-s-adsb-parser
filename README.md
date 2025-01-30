@@ -4,6 +4,9 @@ Parses Mode S Extended Messages (so called ADSB messages)
 ### Dependencies
 * none
 
+### Test Coverage
+see [coverage/lcov-report/index.html](coverage/lcov-report/index.html)
+
 ## Usage
 
 [install via npm](https://www.npmjs.com/package/mode-s-adsb-parser):
