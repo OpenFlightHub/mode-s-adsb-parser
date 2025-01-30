@@ -16,10 +16,27 @@ npm i --save mode-s-adsb-parser
 
 
 ```typescript
-TODO
+
+//Mode S
+import {parseModeS} from 'mode-s-adsb-parser'
 
 // parsing does minimal work and just makes sure the structure is correct
-parse()
+parseModeS([255, 255, 255, 255, 255])
+
+// decodeLocation will only decode the location part of the message (so you can tell wether this is an interesting packet for you, and you want to fully decode it)
+decodeLocation()
+
+
+// fully decodes the message into values that is human readable, self explanatory and uses real world units
+decode()
+
+
+
+// ADSB
+import {parseADSB} from 'mode-s-adsb-parser'
+
+// parsing does minimal work and just makes sure the structure is correct
+parseADSB([255, 255, 255, 255, 255])
 
 // decodeLocation will only decode the location part of the message (so you can tell wether this is an interesting packet for you, and you want to fully decode it)
 decodeLocation()
