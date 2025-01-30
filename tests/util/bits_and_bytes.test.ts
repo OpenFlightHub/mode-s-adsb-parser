@@ -43,3 +43,71 @@ test('bitStringToUnsignedIntegerSafeRanges', ()=>{
         bitStringToUnsignedIntegerSafeRanges('100', [[5, 8]])
     }).toThrow()
 })
+
+test('bitStringToUnsignedIntegerSafeRangeFromBits', ()=>{
+    expect(bitStringToUnsignedIntegerSafeRangeFromBits('100', 3)).toStrictEqual(4)
+    expect(bitStringToUnsignedIntegerSafeRangeFromBits('100', 4)).toStrictEqual(4)
+    expect(()=>{
+        bitStringToUnsignedIntegerSafeRangeFromBits('100', 2)
+    }).toThrow()
+})
+
+test('parseBitStructure', ()=>{
+    expect(parseBitStructure('101', [{
+        name: 'a',
+        bits: 2
+    }, {
+        name: 'b',
+        bits: 1
+    }])).toStrictEqual(new Map<string, number>()
+        .set('a', 2)
+        .set('b', 1)
+    )
+
+    expect(parseBitStructure('1011', [{
+        name: 'a',
+        bits: 2
+    }, {
+        name: 'b',
+        bits: -1
+    }])).toStrictEqual(new Map<string, number>()
+        .set('a', 2)
+        .set('b', 3)
+    )
+
+    expect(()=>{
+        parseBitStructure('100', [{
+            name: 'a',
+            bits: 4
+        }])
+    }).toThrow()
+
+    expect(()=>{
+        parseBitStructure('100', [{
+            name: 'a',
+            bits: 2
+        }, {
+            name: 'b',
+            bits: 2
+        }])
+    }).toThrow()
+
+
+    expect(()=>{
+        parseBitStructure('1', [{
+            name: 'a',
+            bits: -1
+        }, {
+            name: 'b',
+            bits: 1
+        }])
+    }).toThrow()
+
+    expect(()=>{
+        parseBitStructure('1', [{
+            name: 'a',
+            bits: 0
+        }])
+    }).toThrow()
+})
+
