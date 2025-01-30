@@ -20,6 +20,12 @@ export function parseBitStructure<N extends string, D extends BitStructureDefini
 
     let currentIndex = 0
 
+    for(const def of structureDefinition){
+        if(def.bits < -1 || def.bits === 0){
+            throw new Error('structureDefinition is invalid at "' + def.name + '" bits can not be: ' + def.bits)
+        }
+    }
+
     const totalDefinitionMinLength = structureDefinition.map(d => d.bits).filter(b => b >= 0).reduce((prev, cur)=>(prev || 0) + cur)
 
     if(bitString.length < totalDefinitionMinLength){
