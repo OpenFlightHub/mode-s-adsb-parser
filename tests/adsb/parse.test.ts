@@ -1,6 +1,6 @@
-import { parseADSB, ADSB_ParsedMessage_AircraftIdentificationAndCategory } from "../src/adsb/parse";
-import { bitStringToFullBytes } from "../src/util/bits_and_bytes";
-import { intToBitString } from "../src/util/test_helpers";
+import { parseADSB, ADSB_ParsedMessage_AircraftIdentificationAndCategory } from "../../src/adsb/parse";
+import { bitStringToFullBytes } from "../../src/util/bits_and_bytes";
+import { intToBitString } from "../../src/util/test_helpers";
 
 
 

@@ -1,4 +1,4 @@
-import { byteToShortBitString, byteToFullBitString, bytesToFullBitString, bitStringToFullBytes, bitStringToUnsignedInteger, bitStringToUnsignedIntegerSafe, bitStringToUnsignedIntegerSafeRanges, bitStringToUnsignedIntegerSafeRangeFromBits, parseBitStructure } from "../src/util/bits_and_bytes";
+import { byteToShortBitString, byteToFullBitString, bytesToFullBitString, bitStringToFullBytes, bitStringToUnsignedInteger, bitStringToUnsignedIntegerSafe, bitStringToUnsignedIntegerSafeRanges, bitStringToUnsignedIntegerSafeRangeFromBits, parseBitStructure } from "../../src/util/bits_and_bytes";
 
 test('byteToShortBitString', ()=>{
     expect(byteToShortBitString(4)).toStrictEqual('100')

@@ -1,4 +1,4 @@
-import { escapeBytes, intToFullByteBitString, encodeIntBytesAsBytes, ESCAPE_CHAR_CODE, intToBitString } from "../src/util/test_helpers";
+import { escapeBytes, intToFullByteBitString, encodeIntBytesAsBytes, ESCAPE_CHAR_CODE, intToBitString } from "../../src/util/test_helpers";
 
 test('escapeString', ()=>{
     expect(escapeBytes([ESCAPE_CHAR_CODE, 37, 38])).toStrictEqual([ESCAPE_CHAR_CODE, ESCAPE_CHAR_CODE, 37, 38])

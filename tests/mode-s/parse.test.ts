@@ -1,6 +1,6 @@
-import { ModeS_ParsedMessage, parseModeS } from "../src/mode-s/parse";
-import { bitStringToFullBytes, bytesToFullBitString } from "../src/util/bits_and_bytes";
-import { intToBitString } from "../src/util/test_helpers";
+import { ModeS_ParsedMessage, parseModeS } from "../../src/mode-s/parse";
+import { bitStringToFullBytes, bytesToFullBitString } from "../../src/util/bits_and_bytes";
+import { intToBitString } from "../../src/util/test_helpers";
 
 test('parseModeS', ()=>{
     expect(parseModeS(bitStringToFullBytes(
