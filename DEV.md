@@ -8,6 +8,11 @@ npm run test
 
 or on VSCode: `Ctrl` + `Shift` + `T`
 
+## Generate coverage report
+
+* run: `bash make_coverage_report.sh`
+
+
 # Debugging Examples
 
 in `/src/index.ts` uncomment the lines that call `runExample()`
@@ -17,11 +22,6 @@ in `/src/index.ts` uncomment the lines that call `runExample()`
 ## Generate distributable js code
 
 * run: `npm run build` or in VSCOde `Ctrl` + `Shift` + `B`
-
-
-## Generate coverage report
-
-* run: `bash make_coverage_report.sh`
 
 ## Github
 
