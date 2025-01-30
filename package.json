@@ -14,7 +14,8 @@
   },
   "keywords": [
     "adsb",
-    "beast",
+    "modes",
+    "1090",
     "parser"
   ],
   "license": "MIT",
