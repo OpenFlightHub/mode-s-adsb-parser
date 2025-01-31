@@ -5,7 +5,9 @@ export const objectKeys = Object.keys as <T extends object>(obj: T) => Array<key
 // typescript compatible version of Object.assign()
 export const assignObject = Object.assign as <T extends object, U extends object>(obj: T, other: U) => T & U
 
-//TODO this is very close to being absolutely nice, if we could make it so the second generic is not mandatory but infered from param Base
+
+/* Add Missing Properties to an object */
+
 export function addMissingProperties<Base extends object, Full extends Base>(base: Base, additional: OnlyAdditionalProperties<Base, Full>) : Full{
 
     const ret = assignObject(base, additional)
@@ -18,7 +20,9 @@ export type OnlyAdditionalProperties<Base extends Record<string, any>, Extend ex
 
 
 
-/* example usage
+/* How to use */
+
+/*
 type Base = {
     bober: number
 }
@@ -33,7 +37,6 @@ const all = addMissingProperties<Base, Extend>({
 
 })
 
-
 const base1: Base = {
     bober: 42
 }
@@ -43,39 +46,39 @@ const all2 = addMissingProperties<Base, Extend>(base1, {
 })
 */
 
-
+/* COMPUTE RANGE https://catchts.com/range-numbers#part_1 */
 
 export type ComputeRange<
   N extends number,
   Result extends Array<unknown> = [],
 > =
-  /**
-   * If length of Result is equal to N,
-   * stop recursion and return Result
-   */
-  (Result['length'] extends N
+(Result['length'] extends N
     ? Result
-    /**
-     * Otherwise, call ComputeRange recursively with same N,
-     * but with extendsd Result - add Result.length to current Result
-     *
-     * First step:
-     * Result is [] -> ComputeRange is called with [...[], 0]
-     *
-     * Second step:
-     * Result is [0] -> ComputeRange is called with [...[0], 1]
-     *
-     * Third step:
-     * Result is [0, 1] -> ComputeRange is called with [...[0, 1], 2]
-     *
-     * ComputeRange is called until Result will meet a length requirement
-     */
     : ComputeRange<N, [...Result, Result['length']]>
-  )
+)
 
-/* usage
+/* HOW TO USE */
 
 // 0 , 1, 2 ... 998
-export type NumberRange = ComputeRange<999>[number]
+type NumberRange = ComputeRange<999>[number]
 
-*/
+
+
+/* COMPUTE RANGE FROM https://catchts.com/range-numbers#part_2 */
+
+type Add<A extends number, B extends number> = [...ComputeRange<A>, ...ComputeRange<B>]['length']
+
+export type ComputeRangeFrom<
+  From extends number,
+  Length extends number,
+  Result extends Array<unknown> = [],
+> =
+(Result['length'] extends Length
+    ? Result
+    : ComputeRangeFrom<From, Length, [...Result, Add<Result['length'], From>]>
+)
+
+/* How to use */
+
+// 5, 6
+type NumberRangeFrom = ComputeRangeFrom<5, 2>[number]
