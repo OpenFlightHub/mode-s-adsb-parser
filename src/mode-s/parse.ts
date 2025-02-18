@@ -1,11 +1,11 @@
 // docs see https://mode-s.org/1090mhz/content/mode-s/1-basics.html
 
-import { bitStringToUnsignedIntegerSafe, bitStringToUnsignedIntegerSafeRangeFromBits, bitStringToFullBytes, bytesToFullBitString, parseBitStructure, Byte } from '../util/bits_and_bytes'
+import { bitStringToUnsignedIntegerSafe, bitStringToUnsignedIntegerSafeRangeFromBits, bytesToFullBitString, parseBitStructure, Byte } from '../util/bits_and_bytes'
 
 
 export type ModeS_ParsedMessage = {
     downlinkType: Byte
-   contentBits: string
+    contentBits: string
 }
 
 export interface ModeS_ParsedMessage_Type_ExtendedSquitter extends ModeS_ParsedMessage {
@@ -18,7 +18,7 @@ export interface ModeS_ParsedMessage_Type_ExtendedSquitter extends ModeS_ParsedM
         6 = level 2 transponder, with ability to set transponderCapability to 7, either ON GROUND or AIRBONE
         7 = Signifies the Downlink Request value is 0, or the Flight Status is 2, 3, 4, or 5, either airborne or on the ground
     */
-   icaoAddress: number // 24 bits
+    icaoAddress: number // 24 bits
 }
 
 

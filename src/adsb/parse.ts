@@ -1,7 +1,7 @@
 // docs see https://mode-s.org/1090mhz/content/mode-s/1-basics.html
 
 import { ModeS_ParsedMessage_Type_ExtendedSquitter} from '../mode-s/parse'
-import { bytesToFullBitString, Byte, parseBitStructure, bitStringToFullBytes, bitStringToUnsignedInteger } from '../util/bits_and_bytes'
+import { Byte, parseBitStructure, bitStringToFullBytes, bitStringToUnsignedInteger } from '../util/bits_and_bytes'
 
 
 export type ADSB_ParsedMessage = {
@@ -17,7 +17,7 @@ export type ADSB_ParsedMessage = {
         29 	Target state and status information
         31 	Aircraft operation status
     */
-   messageData: Byte[]
+    messageData: Byte[]
 }
 
 

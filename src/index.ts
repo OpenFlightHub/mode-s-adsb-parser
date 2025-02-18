@@ -12,5 +12,5 @@ export type { decode_types }
 import * as util from './util'
 export {util}
 
-import runExample from './example'
-runExample()
+// import runExample from './example'
+// runExample()
