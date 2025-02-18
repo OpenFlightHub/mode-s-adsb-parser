@@ -1,6 +1,6 @@
 {
   "name": "mode-s-adsb-parser",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "OpenFlightHub <mail@openflighthub.org> (https://openflighthub.org)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
