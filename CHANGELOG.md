@@ -1,3 +1,7 @@
+# [0.3.0](https://github.com/OpenFlightHub/mode-s-adsb-parser/compare/0.2.0...0.3.0) (18. Feb 2025)
+
+* fix all parsing and unit tests
+
 # [0.2.0](https://github.com/OpenFlightHub/mode-s-adsb-parser/compare/0.1.0...0.2.0) (30. Jan 2025)
 
 * export bits_and_bytes.ts
