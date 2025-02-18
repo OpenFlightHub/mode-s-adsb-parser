@@ -1,3 +1,8 @@
+# Helpful resources
+https://pure.tudelft.nl/ws/portalfiles/portal/104877928/11_Book_Manuscript_69_1_10_20210510.pdf
+
+(the web version on mode-s.org is missing some tables and has broken references)
+
 # Tests
 
 we are using jest for testing, test files can be found in `/tests`

@@ -21,7 +21,7 @@ npm i --save mode-s-adsb-parser
 import {parseModeS} from 'mode-s-adsb-parser'
 
 // parsing does minimal work and just makes sure the structure is correct
-parseModeS([255, 255, 255, 255, 255])
+const parsedModeSMessage = parseModeS([255, 255, 255, 255, 255])
 
 // decodeLocation will only decode the location part of the message (so you can tell wether this is an interesting packet for you, and you want to fully decode it)
 decodeLocation()
@@ -33,17 +33,39 @@ decode()
 
 
 // ADSB
-import {parseADSB} from 'mode-s-adsb-parser'
+import {parseADSB, decodeBasics} from 'mode-s-adsb-parser'
 
-// parsing does minimal work and just makes sure the structure is correct
-parseADSB([255, 255, 255, 255, 255])
+// downlinkFormat 19 = ADSB (or so call Mode-S Extended Squitter) Message
+if(parsedModeS.downlinkFormat === 19){
 
-// decodeLocation will only decode the location part of the message (so you can tell wether this is an interesting packet for you, and you want to fully decode it)
-decodeLocation()
+    // parsing does minimal work and just makes sure the structure is correct
+    const parsedADSBMessage = parseADSB(parsedModeSMessage)
+
+    // decodeLocation will only decode the location part of the message (so you can tell wether this is an interesting packet for you, and you want to fully decode it)
+    const decodedADSBMessageBasics = decodeBasics(parsedADSBMessage)
+
+    if(decodedADSBMessageBasics.icaoAddress6charHexLowercase === 'ac09f4'){
+
+        // fully decodes the message into values that is human readable, self explanatory and uses real world units
+        decode(parsedADSBMessage)
+    }
+}
+
+/* Decoding positon of a transponder
+    Transponders do not just send gps coordinates, they encode it to save data bits.
+    Because of that, you need multiple messages to reliably calculate the gps coordinates.
+
+    In order to get unambigious (globally unique) aircraft position, you need 2 messages of type Airborne Position or Surface Position. One of the message has to be cpr format "odd", the other one has to be cpr format "even".
+
+    The time difference between these 2 messages should be low (TODO: how low exactly?)
 
 
-// fully decodes the message into values that is human readable, self explanatory and uses real world units
-decode()
+    Once you have computed the unambigious position, you can use a shortcut once you receive a new position message.
+    But this only works if the distance between the two message is less than 180 nautical miles.
+
+    You should enforce this distance limit e.g. by limiting the time between those two messages (e.g. 5 minutes works until mach 3.2 or 4000 km/h )
+*/
+
 ```
 
 ## Changelog

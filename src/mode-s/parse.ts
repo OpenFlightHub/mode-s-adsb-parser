@@ -4,7 +4,12 @@ import { bitStringToUnsignedIntegerSafe, bitStringToUnsignedIntegerSafeRangeFrom
 
 
 export type ModeS_ParsedMessage = {
-    downlinkFormat: Byte
+    downlinkType: Byte
+   contentBits: string
+}
+
+export interface ModeS_ParsedMessage_Type_ExtendedSquitter extends ModeS_ParsedMessage {
+    downlinkType: 17
     transponderCapability: 0 | 4 | 5 | 6 | 7 /*
         0 = level 1 transponder
         1-3 = reserved
@@ -14,39 +19,90 @@ export type ModeS_ParsedMessage = {
         7 = Signifies the Downlink Request value is 0, or the Flight Status is 2, 3, 4, or 5, either airborne or on the ground
     */
    icaoAddress: number // 24 bits
-   contentBytes: Byte[]
 }
 
 
 export function parseModeS(bytes: Byte[]){
 
-    // see https://mode-s.org/1090mhz/content/mode-s/1-basics.html and https://mode-s.org/1090mhz/content/ads-b/1-basics.html
+    // see https://mode-s.org/1090mhz/content/introduction.html#mode-s-format
 
     const bits = bytesToFullBitString(bytes)
 
-    const struct = parseBitStructure(bits, [{
-        name: 'downlinkFormat',
-        bits: 5
-    }, {
-        name: 'transponderCapability',
-        bits: 3
-    }, {
-        name: 'icaoAircraftAddress',
-        bits: 24
-    }, {
-        name: 'rest',
-        bits: -1
-    }])
+    //TODO implement parity
 
-    const ret: ModeS_ParsedMessage = {
-        downlinkFormat: bitStringToUnsignedIntegerSafeRangeFromBits(struct.get('downlinkFormat'), 5, 'downlinkFormat'),
 
-        transponderCapability: bitStringToUnsignedIntegerSafe(struct.get('transponderCapability'), [0, 4, 5, 6, 7], 'transponderCapability'),
+    if(bits.substring(0, 2) === '11'){
+        // special format 24
 
-        icaoAddress: bitStringToUnsignedIntegerSafeRangeFromBits(struct.get('icaoAircraftAddress'), 24, 'icaoAircraftAddress'),
+        //TODO
+        throw new Error('unsupported mode s downlink type "24"')
 
-        contentBytes: bitStringToFullBytes(struct.get('rest'))
+    } else {
+
+        const struct = parseBitStructure(bits, [{
+            name: 'downlinkType',
+            bits: 5
+        }, {
+            name: 'rest',
+            bits: -1
+        }])
+
+        const downlinkType = bitStringToUnsignedIntegerSafeRangeFromBits(struct.get('downlinkType'), 5)
+
+        if(downlinkType >= 16){
+            // long 112 bit format
+
+            const longStruct = parseBitStructure(struct.get('rest'), [{
+                name: 'data',
+                bits: 83
+            }, {
+                name: 'parity',
+                bits: 24
+            }])
+
+
+            if(downlinkType === 17){
+                // Mode S Extended Squitter
+
+                const extendedSquitterStruct = parseBitStructure(longStruct.get('data'), [{
+                    name: 'transponderCapability',
+                    bits: 3
+                }, {
+                    name: 'icaoAircraftAddress',
+                    bits: 24
+                }, {
+                    name: 'content',
+                    bits: 56
+                }])
+
+                const ret: ModeS_ParsedMessage_Type_ExtendedSquitter = {
+                    downlinkType,
+
+                    transponderCapability: bitStringToUnsignedIntegerSafe(extendedSquitterStruct.get('transponderCapability'), [0, 4, 5, 6, 7], 'transponderCapability'),
+
+                    icaoAddress: bitStringToUnsignedIntegerSafeRangeFromBits(extendedSquitterStruct.get('icaoAircraftAddress'), 24, 'icaoAircraftAddress'),
+
+                    contentBits: extendedSquitterStruct.get('content')
+                }
+
+                return ret
+            }
+
+            //TODO
+            throw new Error('unsupported mode s downlink type: "' + downlinkType + '"')
+
+        } else {
+            // short 56 bit format
+
+            const shortStruct = parseBitStructure(struct.get('rest'), [{
+                name: 'data',
+                bits: 27
+            }, {
+                name: 'parity',
+                bits: 24
+            }])
+
+            throw new Error('unsupported mode s downlink type: "' + downlinkType + '"')
+        }
     }
-
-    return ret
 }

@@ -16,6 +16,7 @@ test('intToBitString', ()=>{
     expect(intToBitString(5, 4)).toStrictEqual('0101')
     expect(intToBitString(5, 3)).toStrictEqual('101')
     expect(intToBitString(77, 9)).toStrictEqual('001001101')
+    expect(intToBitString(0, 3)).toStrictEqual('000')
 })
 
 test('encodeIntBytesAsString', ()=>{

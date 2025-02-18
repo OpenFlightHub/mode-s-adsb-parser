@@ -26,10 +26,10 @@ export function parseBitStructure<N extends string, D extends BitStructureDefini
         }
     }
 
-    const totalDefinitionMinLength = structureDefinition.map(d => d.bits).filter(b => b >= 0).reduce((prev, cur)=>(prev || 0) + cur)
+    const totalDefinitionMinLength = structureDefinition.length === 1 ? structureDefinition[0].bits : (structureDefinition.map(d => d.bits).filter(b => b >= 0).reduce((prev, cur)=>(prev || 0) + cur))
 
     if(bitString.length < totalDefinitionMinLength){
-        throw new Error('bitString is shorted then structurDefinition requires (' + totalDefinitionMinLength + '): ' + bitString.length)
+        throw new Error('bitString is shorter then structureDefinition requires (' + totalDefinitionMinLength + '): ' + bitString.length)
     }
 
     for(let i = 0; i < structureDefinition.length; i++){
@@ -117,10 +117,11 @@ export function bitStringToUnsignedInteger<N extends number>(bitString: string) 
 
 /**
  * performs a check if resulting number is an allowed value
+ * Note: typescript typing is only safe for allowedValues [0, ... , 999]
  * @see bitStringToUnsignedInteger()
  * @see bitStringToUnsignedIntegerSafeRanges()
  */
-export function bitStringToUnsignedIntegerSafe<N extends number>(bitString: string, allowedValues: N[], debugLabel?: string) : N {
+export function bitStringToUnsignedIntegerSafe<N extends ComputeRange<999>[number]>(bitString: string, allowedValues: N[], debugLabel?: string) : N {
 
     const numb = bitStringToUnsignedInteger(bitString)
 
@@ -172,8 +173,8 @@ export function bitStringToUnsignedIntegerSafeRanges(bitString: string, allowedR
 }
 
 export function bitStringToFullBytes(bitString: string){
-    if(bitString.length % 8 !== 0){
-        throw new Error('bitString.length is not a multiple of 8')
+    if((bitString.length % 8) !== 0){
+        throw new Error('bitString.length is not a multiple of 8: ' + bitString.length)
     }
 
     const bytes: Byte[] = []
@@ -183,4 +184,15 @@ export function bitStringToFullBytes(bitString: string){
     }
 
     return bytes
+}
+
+
+export function bufferToBytes(buffer: Buffer<ArrayBufferLike>){
+    const ret: Byte[] = []
+
+    for(const byte of buffer){
+        ret.push(byte as Byte)
+    }
+
+    return ret
 }
