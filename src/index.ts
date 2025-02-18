@@ -5,9 +5,8 @@ export { parseADSB } from './adsb/parse'
 export type { ADSB_ParsedMessage } from './adsb/parse'
 
 
-export { decode, decodeBasics } from './adsb/decode'
-import type * as decode_types from './adsb/decode'
-export type { decode_types }
+export { decode, decodeBasics, calculateLocationWithReference, calculateUnambigiousLocation } from './adsb/decode'
+export type { CprData } from './adsb/decode'
 
 import * as util from './util'
 export {util}

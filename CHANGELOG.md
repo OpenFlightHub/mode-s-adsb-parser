@@ -1,3 +1,7 @@
+# [0.3.1](https://github.com/OpenFlightHub/mode-s-adsb-parser/compare/0.3.0...0.3.1) (18. Feb 2025)
+
+* fix exports
+
 # [0.3.0](https://github.com/OpenFlightHub/mode-s-adsb-parser/compare/0.2.0...0.3.0) (18. Feb 2025)
 
 * fix all parsing and unit tests
