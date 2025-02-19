@@ -1,5 +1,5 @@
-import { ModeS_ParsedMessage, parseModeS } from "../../src/mode-s/parse";
-import { bitStringToFullBytes, bytesToFullBitString, bufferToBytes } from "../../src/util/bits_and_bytes";
+import { checkCrcParity, ModeS_ParsedMessage, parseModeS } from "../../src/mode-s/parse";
+import { bitStringToFullBytes, bytesToFullBitString, bufferToBytes, parseBitStructure } from "../../src/util/bits_and_bytes";
 import { intToBitString } from "../../src/util/test_helpers";
 
 // test('parseModeS', ()=>{
@@ -63,4 +63,15 @@ test('parseModeS', ()=>{
         icaoAddress: 4219421,
         contentBits: '01011000110000111000011001000011010111001100010000010010',
     } as ModeS_ParsedMessage)
+})
+
+test('checkCrcParity', ()=>{
+
+    const message = Buffer.from('8D40621D58C386435CC412692AD6', 'hex')
+
+    const bits = bytesToFullBitString(bufferToBytes(message))
+    const contentBits = bits.substring(5, 5 + 83)
+    const parityBits = bits.substring(5 + 83)
+
+    expect(checkCrcParity(contentBits, parityBits)).toStrictEqual(true)
 })

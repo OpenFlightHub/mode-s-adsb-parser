@@ -1,11 +1,18 @@
 import { calculateUnambigiousLocation, decodeBasics } from "./adsb/decode"
 import { parseADSB } from "./adsb/parse"
-import { ModeS_ParsedMessage_Type_ExtendedSquitter, parseModeS } from "./mode-s/parse"
+import { checkCrcParity, ModeS_ParsedMessage_Type_ExtendedSquitter, parseModeS } from "./mode-s/parse"
 import {bufferToBytes, bytesToFullBitString} from "./util/bits_and_bytes"
 
 export default function runExample(){
 
-    //TODO
+    const message = Buffer.from('8D40621D58C386435CC412692AD6', 'hex')
+
+    const bits = bytesToFullBitString(bufferToBytes(message))
+    const contentBits = bits.substring(5, 5 + 83)
+    const parityBits = bits.substring(5 + 83)
+
+    checkCrcParity(contentBits, parityBits)
+
 
     const message1 = Buffer.from('8D40621D58C386435CC412692AD6', 'hex')
 

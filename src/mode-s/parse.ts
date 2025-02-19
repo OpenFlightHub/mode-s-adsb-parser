@@ -1,6 +1,6 @@
 // docs see https://mode-s.org/1090mhz/content/mode-s/1-basics.html
 
-import { bitStringToUnsignedIntegerSafe, bitStringToUnsignedIntegerSafeRangeFromBits, bytesToFullBitString, parseBitStructure, Byte } from '../util/bits_and_bytes'
+import { bitStringToUnsignedIntegerSafe, bitStringToUnsignedIntegerSafeRangeFromBits, bytesToFullBitString, parseBitStructure, Byte, bitStringToFullBytes } from '../util/bits_and_bytes'
 
 
 export type ModeS_ParsedMessage = {
@@ -29,6 +29,8 @@ export function parseModeS(bytes: Byte[]){
     const bits = bytesToFullBitString(bytes)
 
     //TODO implement parity
+
+    // parity check see: https://mode-s.org/1090mhz/content/mode-s/1-basics.html#sec:parity
 
 
     if(bits.substring(0, 2) === '11'){
@@ -64,6 +66,10 @@ export function parseModeS(bytes: Byte[]){
             if(downlinkType === 17){
                 // Mode S Extended Squitter
 
+                // parity check see: https://mode-s.org/1090mhz/content/mode-s/1-basics.html#sec:parity
+
+
+
                 const extendedSquitterStruct = parseBitStructure(longStruct.get('data'), [{
                     name: 'transponderCapability',
                     bits: 3
@@ -74,6 +80,7 @@ export function parseModeS(bytes: Byte[]){
                     name: 'content',
                     bits: 56
                 }])
+
 
                 const ret: ModeS_ParsedMessage_Type_ExtendedSquitter = {
                     downlinkType,
@@ -105,4 +112,79 @@ export function parseModeS(bytes: Byte[]){
             throw new Error('unsupported mode s downlink type: "' + downlinkType + '"')
         }
     }
+}
+
+export function checkCrcParity(dataBitString: string, parityBitString: string){
+    //TODO
+}
+
+type Bit = 0 | 1
+
+
+const PARITY_BIT_COUNT = 24
+function calculateCrcParity(dataBitString: string){
+
+    const dataAndParityBitString = dataBitString + (Array(PARITY_BIT_COUNT).fill('0').join(''))
+
+    const ret = crc(dataAndParityBitString, true)
+
+    return ret
+}
+
+export function crc(dataAndParityBitString: string, encode: boolean){
+
+    // implementation see https://github.com/junzis/pyModeS/blob/master/src/pyModeS/py_common.py
+
+    const generator: Bit[] = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1]
+
+    let msgnpbin = dataAndParityBitString.split('').map(v => v === '1' ? 1 : 0)
+
+    if(encode){
+        msgnpbin = overwritePartOfArray(msgnpbin, 0, Array(PARITY_BIT_COUNT).fill('0'))
+    }
+
+    for(let i = 0; i < msgnpbin.length - PARITY_BIT_COUNT; i++){
+        if(msgnpbin[i] === 0){
+            continue
+        }
+
+        const xOred = xOrBits(msgnpbin.slice(i, i + generator.length), generator)
+
+        msgnpbin = overwritePartOfArray(msgnpbin, i, xOred)
+    }
+
+    // last 24 bits
+    const msgbin = msgnpbin.slice(msgnpbin.length - 24).join('')
+
+    const reminderBits = msgbin.substring(1, msgbin.length - 1)// TODO why cutoff first and last bit ???
+
+    return reminderBits
+
+
+    function xOrBits(bits: Bit[], xor: Bit[]){
+        const ret: Bit[] = []
+
+        for(let i = 0; i < bits.length; i++){
+            ret[i] = (bits[i] ^ xor[i]) as Bit
+        }
+
+        return ret
+    }
+
+
+    /**
+     * does not modify original array!
+     * only overwrites existing array elements! the length of the returned array is the same as of the original "array" parameter
+     */
+    function overwritePartOfArray<T extends any>(array: Array<T>, start: number, withArray: Array<T>){
+
+        if(start > array.length){
+            throw new Error('start can not be larger than array.length')
+        }
+
+        const arrayToWrite = withArray.slice(0, array.length - start)
+
+        return array.slice(0, start).concat(...arrayToWrite)
+    }
+
 }

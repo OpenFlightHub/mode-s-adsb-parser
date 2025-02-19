@@ -966,7 +966,7 @@ function decodeTypeCode(typeCode: number, allMessageBits: string) : ADSB_Decoded
             bits: -1
         }])
 
-        const adsbVersionNumber = bitStringToUnsignedIntegerSafe(struct.get('adsbVersionNumber'), [1, 2])
+        const adsbVersionNumber = bitStringToUnsignedIntegerSafe(struct.get('adsbVersionNumber'), [1, 2], 'adsbVersionNumber')
 
         return adsbVersionNumber === 1 ? 'aircraft_operation_status_v1' : 'aircraft_operation_status_v2'
     }

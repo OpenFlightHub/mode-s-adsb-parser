@@ -29,10 +29,6 @@ export type CprData = {
     }
 }
 
-/**
- * checks if bit count matches format and parity check is fine
- * @returns
- */
 export function parseADSB(modeSmessage: ModeS_ParsedMessage_Type_ExtendedSquitter): ADSB_ParsedMessage {
 
     const structMessage = parseBitStructure(modeSmessage.contentBits, [{
@@ -42,6 +38,9 @@ export function parseADSB(modeSmessage: ModeS_ParsedMessage_Type_ExtendedSquitte
         name: 'data',
         bits: 56 - 5
     }])
+
+
+    //TODO implement parity
 
     return {
         icaoAddress6charHexLowercase: modeSmessage.icaoAddress.toString(16).toLowerCase(),
